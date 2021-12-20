@@ -1,0 +1,109 @@
+<div class="container p-3">
+  <div class="row d-flex justify-content-between">
+    <div class="col-xl-3 col-6">
+      <span class="p-input-icon-left w-100 search-bar">
+        <i class="pi pi-search"></i>
+        <input
+          class="w-100"
+          type="text"
+          pInputText
+          placeholder="Busqueda por nombre"
+          [(ngModel)]="busquedaPorNombre"
+          (input)="realizarBusqueda()"
+        />
+      </span>
+    </div>
+    <div class="col-xl-3 col-6">
+    
+    </div>
+  </div>
+  <div class="row">
+    <div *ngFor="let pokemon of virtualPokemons">
+      <ng-container [ngSwitch]="vistasDisponibles">
+        <div *ngSwitchCase="'rejilla'">
+          <ng-container
+            *ngTemplateOutlet="vistaTarjeta; context: { $implicit: pokemon }"
+          ></ng-container>
+        </div>
+        <div *ngSwitchCase="'listado'">
+          <ng-container
+            *ngTemplateOutlet="vistaListado; context: { $implicit: pokemon }"
+          ></ng-container>
+        </div>
+        <div *ngSwitchCase="'slider'"></div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<!--COMPONENTIZAR SI REQUERIDO-->
+
+<ng-template #vistaTarjeta let-pokemon>
+  <p-card
+    header="{{ pokemon.name }}"
+    class="col-xl-4 col-md-6 col-12 py-3"
+    subheader="{{ pokemon.types[0]?.type?.name || 'No type' }}"
+  >
+    <img
+      src="{{ pokemon.sprites.front_default }}"
+      class="
+        img-fluid
+        ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}
+      "
+      alt=""
+    />
+    <p-footer>
+      <button
+        pButton
+        type="button"
+        label="Danger"
+        class="p-button-danger"
+        icon="pi pi-plus"
+        [ngClass]="{
+          'p-button-danger': isPokomonAddedToPokedex(pokemon.name)
+        }"
+        label="{{ returnLabelDependingIfAlreadyOnPokedex(pokemon.name) }}"
+        (click)="
+          isPokomonAddedToPokedex(pokemon.name)
+            ? removePokemonFromPokedex(pokemon.name)
+            : addPokemonToPokedex(pokemon.name)
+        "
+      ></button>
+    </p-footer>
+  </p-card>
+</ng-template>
+
+<ng-template #vistaListado let-pokemon>
+  <p-card
+    header="{{ pokemon.name }}"
+    class="col-12"
+    subheader="{{ pokemon.types[0]?.type?.name || 'No type' }}"
+  >
+    <img
+      src="{{ pokemon.sprites.front_default }}"
+      class="
+        img-fluid
+        ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}
+      "
+      alt=""
+    />
+    <p-footer>
+      <button
+        pButton
+        type="button"
+        label="Danger"
+        class="p-button-danger"
+        icon="pi pi-plus"
+        [ngClass]="{
+          'p-button-danger': isPokomonAddedToPokedex(pokemon.name)
+        }"
+        label="{{ returnLabelDependingIfAlreadyOnPokedex(pokemon.name) }}"
+        (click)="
+          isPokomonAddedToPokedex(pokemon.name)
+            ? removePokemonFromPokedex(pokemon.name)
+            : addPokemonToPokedex(pokemon.name)
+        "
+      ></button>
+    </p-footer>
+  </p-card>
+</ng-template>
